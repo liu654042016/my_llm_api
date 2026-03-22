@@ -2,8 +2,14 @@
 
 test:
 	@if ! command -v pytest >/dev/null 2>&1; then \
-	  echo "pytest not found. Please install Python and pytest to run tests locally."; \
-	  exit 1; \
+	  echo "pytest not found. Installing dev dependencies..."; \
+	  if command -v python3 >/dev/null 2>&1; then \
+	    python3 -m pip install --upgrade pip; \
+	    if [ -f requirements-dev.txt ]; then python3 -m pip install -r requirements-dev.txt; fi; \
+	  else \
+	    echo "Python3 not found. Please install Python 3.x to continue."; \
+	    exit 1; \
+	  fi; \
 	fi
 	pytest -v
 
