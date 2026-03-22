@@ -1,10 +1,13 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 
 @dataclass
 class AdapterConfig:
     name: str
+    api_key: Optional[str] = None
+    base_url: Optional[str] = None
+    models: Optional[list[str]] = None
 
 
 @dataclass
