@@ -14,6 +14,7 @@ class HealthStatus:
 class HealthChecker:
     def __init__(self, config):
         self.config = config
+        self.adapters = getattr(config, "adapters", [])
 
     async def check_all(self) -> List[HealthStatus]:
         # Return empty list to indicate all healthy by default in tests
