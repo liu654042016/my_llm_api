@@ -1,10 +1,10 @@
-from typing import Any
+from typing import Any, Optional
 
 import httpx
 
 
 class AdapterError(Exception):
-    def __init__(self, message: str, provider: str | None = None) -> None:
+    def __init__(self, message: str, provider: Optional[str] = None) -> None:
         super().__init__(message)
         self.provider = provider
 
@@ -14,7 +14,7 @@ class BaseAdapter:
         self.name = name
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
-        self._client: httpx.AsyncClient | None = None
+        self._client: Optional[httpx.AsyncClient] = None
 
     async def _get_client(self) -> httpx.AsyncClient:
         if self._client is None:

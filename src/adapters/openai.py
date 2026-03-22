@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Optional
 
 import httpx
 
@@ -13,7 +13,7 @@ class OpenAIAdapter(BaseAdapter):
         name: str,
         api_key: str,
         base_url: str,
-        models: List[str] | None = None,
+        models: Optional[List[str]] = None,
         **kwargs: Any,
     ) -> None:
         super().__init__(name=name, api_key=api_key, base_url=base_url, **kwargs)
