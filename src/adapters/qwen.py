@@ -1,4 +1,4 @@
-from typing import Any, Optional, List
+from typing import Any, List, Optional
 
 import httpx
 
@@ -6,8 +6,6 @@ from src.adapters.base import BaseAdapter, AdapterError
 
 
 class QwenAdapter(BaseAdapter):
-    """Adapter for Alibaba Qwen (DashScope) API."""
-
     def __init__(
         self,
         name: str,
@@ -16,23 +14,17 @@ class QwenAdapter(BaseAdapter):
         models: Optional[List[str]] = None,
         **kwargs: Any,
     ) -> None:
-        super().__init__(name=name, api_key=api_key, base_url=base_url, **kwargs)
-        self.models: List[str] = models or []
-
-    def supports_model(self, model: str) -> bool:
-        return model in self.models
+        super().__init__(name=name, api_key=api_key, base_url=base_url, models=models)
 
     async def chat_completions(
         self,
-        messages: list[dict[str, Any]],
+        messages: list,
         model: str,
         stream: bool = False,
         **kwargs: Any,
     ) -> httpx.Response:
-        """Call Qwen API with OpenAI-compatible interface."""
         client = await self._get_client()
 
-        # Qwen accepts OpenAI format directly
         request_body = {
             "model": model,
             "messages": messages,

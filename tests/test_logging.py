@@ -27,6 +27,7 @@ def test_request_logger_singleton():
 
 def test_request_logger_records():
     logger = RequestLogger()
+    logger.clear()
     logger.log(
         model="gpt-4o",
         provider="openai",

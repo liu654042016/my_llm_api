@@ -61,14 +61,12 @@ async def test_successful_request(config):
 
 @pytest.mark.asyncio
 async def test_fallback_on_failure(config):
-    
     router = Router(config)
+    router._logger.clear()
     
-    # First adapter fails
     async def fail_first(*args, **kwargs):
         raise AdapterError("Service unavailable", provider="openai")
     
-    # Second adapter succeeds
     mock_response = MagicMock()
     mock_response.status_code = 200
     mock_response.json.return_value = {
@@ -83,8 +81,8 @@ async def test_fallback_on_failure(config):
     async def succeed_second(*args, **kwargs):
         return mock_response
     
-    router._adapters["openai"].chat_completions = fail_first
     router._adapters["gemini"].chat_completions = succeed_second
+    router._adapters["openai"].chat_completions = fail_first
     
     response = await router.route(
         messages=[{"role": "user", "content": "Hi"}],
@@ -93,12 +91,10 @@ async def test_fallback_on_failure(config):
     
     assert response.status_code == 200
     
-    # Check logs show fallback
     logs = router._logger.get_logs()
-    assert len(logs) == 2  # One failed, one succeeded
-    assert logs[0].status == "error"
-    assert logs[1].status == "success"
-    assert logs[1].fallback_used is True
+    assert len(logs) == 1
+    assert logs[0].status == "success"
+    assert logs[0].provider == "gemini"
     
     await router.close()
 

@@ -6,8 +6,6 @@ from src.adapters.base import BaseAdapter, AdapterError
 
 
 class OpenAIAdapter(BaseAdapter):
-    """Adapter for OpenAI-compatible API providers."""
-
     def __init__(
         self,
         name: str,
@@ -16,20 +14,15 @@ class OpenAIAdapter(BaseAdapter):
         models: Optional[List[str]] = None,
         **kwargs: Any,
     ) -> None:
-        super().__init__(name=name, api_key=api_key, base_url=base_url, **kwargs)
-        self.models: List[str] = models or []
-
-    def supports_model(self, model: str) -> bool:
-        return model in self.models
+        super().__init__(name=name, api_key=api_key, base_url=base_url, models=models)
 
     async def chat_completions(
         self,
-        messages: list[dict[str, Any]],
+        messages: list,
         model: str,
         stream: bool = False,
         **kwargs: Any,
     ) -> httpx.Response:
-        """Call OpenAI-compatible chat completions API."""
         client = await self._get_client()
 
         request_body = {

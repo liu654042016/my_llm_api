@@ -1,4 +1,6 @@
-from typing import Any
+from __future__ import annotations
+
+from typing import Any, List, Optional
 
 import httpx
 
@@ -6,30 +8,23 @@ from src.adapters.base import BaseAdapter, AdapterError
 
 
 class GeminiAdapter(BaseAdapter):
-    """Adapter for Google Gemini API."""
-
     def __init__(
         self,
         name: str,
         api_key: str,
         base_url: str,
-        models: list[str] | None = None,
+        models: Optional[List[str]] = None,
         **kwargs: Any,
     ) -> None:
-        super().__init__(name=name, api_key=api_key, base_url=base_url, **kwargs)
-        self.models: list[str] = models or []
-
-    def supports_model(self, model: str) -> bool:
-        return model in self.models
+        super().__init__(name=name, api_key=api_key, base_url=base_url, models=models)
 
     async def chat_completions(
         self,
-        messages: list[dict[str, Any]],
+        messages: list,
         model: str,
         stream: bool = False,
         **kwargs: Any,
     ) -> httpx.Response:
-        """Call Gemini API with OpenAI-compatible interface."""
         client = await self._get_client()
 
         contents = self._convert_messages(messages)
@@ -63,12 +58,10 @@ class GeminiAdapter(BaseAdapter):
                 provider=self.name,
             )
 
-    def _convert_messages(self, messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
-        """Convert OpenAI message format to Gemini format."""
-        contents: list[dict[str, Any]] = []
+    def _convert_messages(self, messages: list) -> list:
+        contents = []
         for msg in messages:
             role = msg.get("role", "user")
-            # Gemini only supports "user" and "model"
             if role == "assistant":
                 role = "model"
             elif role == "system":
