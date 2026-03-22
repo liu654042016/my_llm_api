@@ -7,8 +7,6 @@ def sample_config():
     from src.core.config import Config, AdapterConfig
     
     return Config(
-        host="0.0.0.0",
-        port=8000,
         adapters=[
             AdapterConfig(
                 name="openai",
@@ -23,6 +21,4 @@ def sample_config():
                 models=["gemini-1.5-flash"],
             ),
         ],
-        log_level="INFO",
-        log_requests=True,
     )
