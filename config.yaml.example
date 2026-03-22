@@ -32,6 +32,16 @@ adapters:
       - "qwen-plus"
       - "qwen-max"
 
+  - name: "zhipu"
+    api_key: "${ZHIPU_API_KEY}"
+    base_url: "https://open.bigmodel.cn/api/paas/v4"
+    models:
+      - "glm-4"
+      - "glm-4-plus"
+      - "glm-4-flash"
+      - "glm-4-long"
+      - "glm-4v"
+
 # Fallback order (sequential, first available)
 # Models map to adapters in order listed above
 model_fallback:
@@ -40,6 +50,7 @@ model_fallback:
     - "openai"
     - "gemini"
     - "qwen"
+    - "zhipu"
 
 # Logging
 log_level: "INFO"

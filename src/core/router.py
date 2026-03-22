@@ -7,6 +7,7 @@ from src.adapters.base import AdapterError, BaseAdapter
 from src.adapters.gemini import GeminiAdapter
 from src.adapters.openai import OpenAIAdapter
 from src.adapters.qwen import QwenAdapter
+from src.adapters.zhipu import ZhipuAdapter
 from src.core.config import Config, AdapterConfig
 from src.core.logging import RequestLogger
 
@@ -15,6 +16,7 @@ ADAPTER_CLASSES = {
     "openai": OpenAIAdapter,
     "gemini": GeminiAdapter,
     "qwen": QwenAdapter,
+    "zhipu": ZhipuAdapter,
 }
 
 
