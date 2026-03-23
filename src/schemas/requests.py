@@ -1,15 +1,19 @@
-from typing import List, Optional
+from typing import Any, List, Optional, Union
 
 from pydantic import BaseModel, Field
 
 
-class Message(BaseModel):
-    """Chat message."""
-    role: str = Field(..., description="Role: system, user, or assistant")
-    content: str = Field(..., description="Message content")
+class ContentPart(BaseModel, extra="ignore"):
+    type: str = "text"
+    text: Optional[str] = None
 
 
-class ChatCompletionRequest(BaseModel):
+class Message(BaseModel, extra="ignore"):
+    role: str = Field(..., description="Role: system, user, assistant, or developer")
+    content: Union[str, List[ContentPart]] = Field(..., description="Message content")
+
+
+class ChatCompletionRequest(BaseModel, extra="ignore"):
     """OpenAI-compatible chat completion request."""
     model: str = Field(..., description="Model name")
     messages: List[Message] = Field(..., description="Chat messages")
